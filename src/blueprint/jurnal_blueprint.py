@@ -31,3 +31,16 @@ def delete_jurnal(id):
     db.session.delete(jurnal)
     db.session.commit()
     return redirect('/jurnal')
+
+@jurnal_bp.route('/jurnal/<int:id>/update', methods=['GET','POST'])
+def update_jurnal(id):
+    jurnal = Jurnal.query.filter_by(id=id).first()
+    if request.method=='POST':
+        form = JurnalForm()
+        jurnal.name = form.name.data
+        jurnal.description = form.description.data
+        db.session.add(jurnal)
+        db.session.commit()
+        return redirect('/jurnal')
+    form = JurnalForm(name=jurnal.name, description=jurnal.description)
+    return render_template('jurnal_update.html', form=form, id=id)
