@@ -7,6 +7,26 @@
     <title>Jurnal</title>
 </head>
 <body>
-    <h1>Ini halaman jurnal</h1>
+    <table>
+        <thead>
+            <th>
+                <td>Name</td>
+                <td>Description</td>
+            </th>
+        </thead>
+        <tbody>
+            {% for j in jurnals %}
+            <tr>
+                <td>
+                    {{j.name}}
+                </td>
+                <td>
+                    {{j.description}}
+                </td>
+            </tr>
+            
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, request, url_for, render_template
+from flask import Blueprint, redirect, request, render_template
 from models.user import User
 from form.form_auth import LoginForm
 from flask_login import login_user, login_required
@@ -12,11 +12,6 @@ auth_blueprint = Blueprint("auth_blueprint", __name__)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-
-@auth_blueprint.route('/jurnal')
-@login_required
-def jurnal():
-    return render_template('jurnal.html')
 
 
 @auth_blueprint.route('/login', methods=['POST', 'GET'])
