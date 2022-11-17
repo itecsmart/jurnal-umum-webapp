@@ -23,3 +23,11 @@ def create_jurnal():
         return redirect('/jurnal')
     form = JurnalForm()
     return render_template('jurnal_form.html', form=form)
+
+
+@jurnal_bp.route('/jurnal/<int:id>/delete')
+def delete_jurnal(id):
+    jurnal = Jurnal.query.filter_by(id=id).first()
+    db.session.delete(jurnal)
+    db.session.commit()
+    return redirect('/jurnal')
