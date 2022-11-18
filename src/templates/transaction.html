@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col">
+        <a href="/jurnal/create" class="btn btn-secondary" style="margin-left: 85%;margin-top: 15px;margin-bottom: 15px;">Transaction <b><i class="bi bi-plus-lg"></i></b></a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="6"><h3>Transaction of Jurnal : <a href="/jurnal">{{jurnal.name}}</a></h3>
+                        <p>Kas : {{kas}}</h4>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Debt
+                    </th>
+                    <th>
+                        Kredit
+                    </th>
+                    <th>
+                        Kas
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lt in list_transaction %}
+                <tr>
+                    <td>
+                        {{lt.date}}
+                    </td>
+                    <td>
+                        {{lt.description}}
+                    </td>
+                    <td>
+                        {{lt.debt}}
+                    </td>
+                    <td>
+                        {{lt.kredit}}
+                    </td>
+                    <td>
+                        {{lt.kas}}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <a href="#" class="btn btn-success">Edit</a>
+                            <a href="#" class="btn btn-danger">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
+</div>
+  
+{% endblock content %}

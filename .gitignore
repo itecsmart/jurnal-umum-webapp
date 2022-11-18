@@ -135,3 +135,7 @@ dmypy.json
 *.db
 # Migration
 migrations/
+
+
+isi.py
+src/form/form_album.py
