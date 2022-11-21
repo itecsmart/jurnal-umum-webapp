@@ -1,10 +1,13 @@
-from flask import Blueprint, redirect, render_template, url_for
+from flask import Blueprint, redirect, render_template, url_for, request
 from models import *
+from form import *
+import datetime
 
 transaction_bp = Blueprint('transaction_bp',__name__)
 
 @transaction_bp.route('/jurnal/<int:id>/transaction')
 def transaction(id):
+    form = TransactionForm()
     transactions = Transaction.query.filter(Transaction.jurnal_id==id).all()
     jurnal = Jurnal.query.filter_by(id=id).first()
     list_transaction = []
@@ -20,7 +23,7 @@ def transaction(id):
             'kas':kas
         }
         list_transaction.append(data)
-    return render_template('transaction.html', id=id, list_transaction=list_transaction, jurnal=jurnal, kas=kas)
+    return render_template('transaction.html', id=id, list_transaction=list_transaction, jurnal=jurnal, kas=kas, form=form)
 
 
 
@@ -30,3 +33,16 @@ def transaction_delete(id, t_id):
     db.session.delete(transaction)
     db.session.commit()
     return redirect(url_for('transaction_bp.transaction', id=id))
+
+
+@transaction_bp.route('/jurnal/<int:id>/transaction/create', methods=['POST'])
+def transaction_create(id):
+    if request.method=='POST':
+        ...
+        
+        form = TransactionForm()
+        date= datetime.datetime.strptime(form.date.data, "%Y/%M/%d")
+        transaction = Transaction(jurnal_id=id, date=date, description=form.description.data, kredit=form.kredit.data, debt=form.debt.data )
+        db.session.add(transaction)
+        db.session.commit()
+        return redirect(url_for('transaction_bp.transaction', id=id))
