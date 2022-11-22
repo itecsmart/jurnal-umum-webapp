@@ -49,7 +49,15 @@ def transaction_create(id):
 @transaction_bp.route('/jurnal/<int:id>/transaction/<int:t_id>/edit', methods=['GET', 'POST'])
 def edit(id, t_id):
     transaction = Transaction.query.filter_by(id=t_id).first()
-    print(transaction)
+    if request.method=='POST':
+        form = TransactionForm()
+        transaction.date = datetime.datetime.strptime(form.date.data, "%Y/%M/%d")
+        transaction.description = form.description.data
+        transaction.debt = form.debt.data
+        transaction.kredit = form.kredit.data
+        db.session.add(transaction)
+        db.session.commit()
+        return redirect(url_for('transaction_bp.transaction', id=id))
     form = TransactionForm(
         date = datetime.datetime.strftime(transaction.date, '%Y/%m/%d'),
         description= transaction.description,
