@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row" style="margin-top: 25px;">
+    <div class="col"></div>
+    <div class="col card shadow p-3 mb-5 bg-body rounded" style="height: 500px;">
+      <form action="{{url_for('transaction_bp.edit', id=id, t_id=t_id)}}" method="POST">
+        <h2 style="text-align:center ;">Edit Transaction</h2>
+        {{form.csrf_token}}
+        <div class="form-group">
+            {{form.date.label}}
+            {{form.date(class='form-control', id='dateTime')}}
+        </div>
+        <div class="form-group">
+          <label for="" class="form-label">{{form.description.label}}</label>
+          {{form.description(class='form-control')}}
+        </div>
+        <div class="form-group">
+          <label for="" class="form-label">{{form.debt.label}}</label>
+          {{form.debt(class='form-control')}}
+        </div>
+        <div class="form-group">
+          <label for="" class="form-label">{{form.kredit.label}}</label>
+          {{form.kredit(class='form-control')}}
+        </div>
+        <div class="form-group" style="margin-top: 61px;margin-left: 70%;">
+          <a href="/jurnal/{{id}}/transaction" class="btn btn-primary">Back</a>
+          <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+      </form>
+    </div>
+    <div class="col"></div>
+</div>
+
+<script>
+    $(function() {
+      $('#dateTime').ejDateTimePicker({
+         width: '180px',
+         dateTimeFormat: "yyy/MM/dd",
+      });
+   });
+   </script>
+
+
+{% endblock content %}
