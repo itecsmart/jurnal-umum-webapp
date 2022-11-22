@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col">
+        <a href="/jurnal/create" class="btn btn-secondary" style="margin-left: 88%;margin-top: 15px;margin-bottom: 15px;">Jurnal <i class="bi bi-plus-lg"></i></a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="3" style="text-align:center ;">List Jurnal</th>
+                </tr>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for j in jurnals %}
+                <tr>
+                    <td>
+                        {{j.name}}
+                    </td>
+                    <td style="width: 376px ;">
+                        {{j.description}}
+                    </td>
+                    <td style="width:277px ;">
+                        <div class="form-group">
+                            <a href="/jurnal/{{j.id}}/update" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                            <a href="/jurnal/{{j.id}}/delete" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                            <a href="/jurnal/{{j.id}}/transaction" class="btn btn-primary"><i class="bi bi-credit-card-fill"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="col-2"></div>
+</div>
+  
+{% endblock content %}

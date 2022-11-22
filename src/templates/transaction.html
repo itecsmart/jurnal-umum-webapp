@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-2"></div>
+    <div class="col">
+        <a href="#" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 85%;margin-top: 15px;margin-bottom: 15px;">Transaction <b><i class="bi bi-plus-lg"></i></b></a>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th colspan="6"><h3>Transaction of Jurnal : <a href="/jurnal">{{jurnal.name}}</a></h3>
+                        <p>Kas : {{kas}}</h4>
+                    </th>
+                </tr>
+                <tr>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Debt
+                    </th>
+                    <th>
+                        Kredit
+                    </th>
+                    <th>
+                        Kas
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lt in list_transaction %}
+                <tr>
+                    <td>
+                        {{lt.date}}
+                    </td>
+                    <td>
+                        {{lt.description}}
+                    </td>
+                    <td>
+                        {{lt.debt}}
+                    </td>
+                    <td>
+                        {{lt.kredit}}
+                    </td>
+                    <td>
+                        {{lt.kas}}
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/edit" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
+                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/delete" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <form action="{{url_for('transaction_bp.transaction_create', id=id)}}" method="POST">
+                {{form.csrf_token}}
+                <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Create New Transaction</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="" class="form-label">{{form.date.label}}</label>
+                        {{form.date(class='form-control', id="dateTime")}}
+                      </div>
+                      <div class="form-group">
+                        <label for="" class="form-label">{{form.description.label}}</label>
+                        {{form.description(class='form-control')}}
+                      </div>
+                      <div class="form-group">
+                        <label for="" class="form-label">{{form.debt.label}}</label>
+                        {{form.debt(class='form-control', value=0)}}
+                      </div>
+                      <div class="form-group">
+                        <label for="" class="form-label">{{form.kredit.label}}</label>
+                        {{form.kredit(class='form-control',value=0)}}
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                  </div>
+              </form>
+            </div>
+          </div>
+    </div>
+    <div class="col-2"></div>
+</div>
+
+<script>
+    $(function() {
+      $('#dateTime').ejDateTimePicker({
+         width: '180px',
+         dateTimeFormat: "yyy/MM/dd",
+      });
+   });
+   </script>
+  
+{% endblock content %}

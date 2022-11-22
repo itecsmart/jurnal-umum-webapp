@@ -63,6 +63,8 @@ db.sqlite3-journal
 
 # Flask stuff:
 instance/
+
+#
 .webassets-cache
 
 # Scrapy stuff:
@@ -109,6 +111,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+myenv/
 
 # Spyder project settings
 .spyderproject
@@ -127,3 +130,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Sqlite
+*.db
+# Migration
+migrations/
+
+
+isi.py
+src/form/form_album.py
