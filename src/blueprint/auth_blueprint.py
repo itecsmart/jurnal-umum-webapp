@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, request, render_template
 from models.user import User
 from form.form_auth import LoginForm
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from extensions import login_manager
 
@@ -27,3 +27,10 @@ def login():
         return redirect('/login')
     form = LoginForm()
     return render_template('login.html',title='Jurnal Umum | Login', form=form)
+
+
+
+@auth_blueprint.route('/logout')
+def logout():
+    logout_user()
+    return redirect('/login')
