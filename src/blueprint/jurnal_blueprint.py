@@ -10,7 +10,8 @@ jurnal_bp = Blueprint('jurnal_bp', __name__)
 @login_required
 def jurnal():
     jurnals = Jurnal.query.all()
-    return render_template('jurnal.html', jurnals=jurnals)
+    form = JurnalForm()
+    return render_template('jurnal.html', jurnals=jurnals, form=form)
 
 
 @jurnal_bp.route('/jurnal/create', methods=['GET', 'POST'])
