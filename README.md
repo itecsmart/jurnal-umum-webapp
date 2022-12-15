@@ -1,24 +1,24 @@
 # jurnal-umum-webapp
 Aplikasi Pencatatan Jurnal Umum menggunakan Framework Flask.
 
-Tujuan:
+## Tujuan:
 1. Gambaran minimum aplikasi yang dapat di buat oleh peserta kursus python web apps.
 2. Sebagai dokumentasi dan acuan bagi trainer python web apps yang baru.
 
 
-Fitur Aplikasi:
+## Fitur Aplikasi:
 1. Login
 2. List Jurnal
 3. Tambah Jurnal
 4. Edit Jurnal
-5. Delete Jurnal
+5. Delete Jurnal  
 6. List Transaksi
 7. Tambah Transaksi
 8. Edit Transaksi
 9. Delete Transaksi
 
-Tutorial
-1. Installasi
+## Tutorial
+### 1. Installasi
    - Clone project
     
       Sebelum melakukan proses cloning pastikan anda menginstall git di local machine anda. Kemudian untuk mendapatkan Jurnal Umum Web Apps kita dapat melakukan proses cloning project dengan menggunakan command sebagai berikut 
@@ -39,11 +39,12 @@ Tutorial
       Selanjutnya unutk membuat environment gunakan command 
 
       ```
-      python3 -m venv myenv
+      python3 -m venv myenv 
       ```
-    - Aktifasi environment
-     
-      Setelah kita membuat environment kita perlu untuk mengaktifasi environment tesebut dengan menggunakan command:
+
+  - Aktifasi environment
+   
+    Setelah kita membuat environment kita perlu untuk mengaktifasi environment tesebut dengan menggunakan command:
       
       Windows
       ```
@@ -61,11 +62,12 @@ Tutorial
       ```
       pip install -r requirement.txt
       ``` 
-2. Menjalankan Aplikasi
+### 2. Menjalankan Aplikasi
    
    Setelah berhasil melakukan cloning dan membuat environtment, maka langkah selanjutnya adalah menjalankan project dengan cara
    ```
    python app.py
    ```
-3. Video Tutorial
+### 3. Video Tutorial
+   
    Comming soon : )
