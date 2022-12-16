@@ -131,11 +131,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#Sqlite
-*.db
 # Migration
 migrations/
 
 
 isi.py
 src/form/form_album.py
+src/form/template/test.html
