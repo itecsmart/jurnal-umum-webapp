@@ -39,7 +39,7 @@ def transaction_delete(id, t_id):
 def transaction_create(id):
     if request.method=='POST':        
         form = TransactionForm()
-        date= datetime.datetime.strptime(form.date.data, "%Y/%M/%d")
+        date= datetime.datetime.strptime(form.date.data, "%d/%M/%Y")
         transaction = Transaction(jurnal_id=id, date=date, description=form.description.data, kredit=form.kredit.data, debt=form.debt.data )
         db.session.add(transaction)
         db.session.commit()

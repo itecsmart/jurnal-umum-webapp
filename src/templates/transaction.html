@@ -1,109 +1,419 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row">
-    <div class="col-2"></div>
-    <div class="col">
-        <a href="#" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-left: 85%;margin-top: 15px;margin-bottom: 15px;">Transaction <b><i class="bi bi-plus-lg"></i></b></a>
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th colspan="6"><h3>Transaction of Jurnal : <a href="/jurnal">{{jurnal.name}}</a></h3>
-                        <p>Kas : {{kas}}</h4>
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        Date
-                    </th>
-                    <th>
-                        Description
-                    </th>
-                    <th>
-                        Debt
-                    </th>
-                    <th>
-                        Kredit
-                    </th>
-                    <th>
-                        Kas
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for lt in list_transaction %}
-                <tr>
-                    <td>
-                        {{lt.date}}
-                    </td>
-                    <td>
-                        {{lt.description}}
-                    </td>
-                    <td>
-                        {{lt.debt}}
-                    </td>
-                    <td>
-                        {{lt.kredit}}
-                    </td>
-                    <td>
-                        {{lt.kas}}
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/edit" class="btn btn-success"><i class="bi bi-pencil-square"></i></a>
-                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/delete" class="btn btn-danger"><i class="bi bi-trash-fill"></i></a>
-                        </div>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <form action="{{url_for('transaction_bp.transaction_create', id=id)}}" method="POST">
-                {{form.csrf_token}}
-                <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Create New Transaction</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div class="form-group">
-                        <label for="" class="form-label">{{form.date.label}}</label>
-                        {{form.date(class='form-control', id="dateTime")}}
-                      </div>
-                      <div class="form-group">
-                        <label for="" class="form-label">{{form.description.label}}</label>
-                        {{form.description(class='form-control')}}
-                      </div>
-                      <div class="form-group">
-                        <label for="" class="form-label">{{form.debt.label}}</label>
-                        {{form.debt(class='form-control', value=0)}}
-                      </div>
-                      <div class="form-group">
-                        <label for="" class="form-label">{{form.kredit.label}}</label>
-                        {{form.kredit(class='form-control',value=0)}}
-                      </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Save</button>
-                    </div>
-                  </div>
-              </form>
-            </div>
-          </div>
-    </div>
-    <div class="col-2"></div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
 
-<script>
-    $(function() {
-      $('#dateTime').ejDateTimePicker({
-         width: '180px',
-         dateTimeFormat: "yyy/MM/dd",
-      });
-   });
-   </script>
-  
-{% endblock content %}
+<head>
+    <meta charset="utf-8">
+    <title>ITEC - Jurnal</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/index.min.css" />
+    <link href="{{url_for('static', filename='css/vendors/flatpickr.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='css/style.css')}}" rel="stylesheet">
+    
+
+</head>
+
+<body
+    class="font-inter antialiased bg-slate-100 text-slate-600"
+    :class="{ 'sidebar-expanded': sidebarExpanded }"
+    x-data="{ sidebarOpen: false, sidebarExpanded: localStorage.getItem('sidebar-expanded') == 'true' }"
+    x-init="$watch('sidebarExpanded', value => localStorage.setItem('sidebar-expanded', value))"
+>
+
+    <script>
+        if (localStorage.getItem('sidebar-expanded') == 'true') {
+            document.querySelector('body').classList.add('sidebar-expanded');
+        } else {
+            document.querySelector('body').classList.remove('sidebar-expanded');
+        }
+    </script>
+
+    <!-- Page wrapper -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- Sidebar -->
+        <div>
+            <!-- Sidebar backdrop (mobile only) -->
+            <div class="fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200" :class="sidebarOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'" aria-hidden="true" x-cloak></div>
+        
+            <!-- Sidebar -->
+            <div id="sidebar" class="flex flex-col absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 lg:w-20 lg:sidebar-expanded:!w-64 2xl:!w-64 shrink-0 bg-slate-800 p-4 transition-all duration-200 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-64'" @click.outside="sidebarOpen = false" @keydown.escape.window="sidebarOpen = false" x-cloak="lg">
+        
+                <!-- Sidebar header -->
+                <div class="flex justify-between mb-10 pr-3 sm:px-2">
+                    <!-- Close button -->
+                    <button class="lg:hidden text-slate-500 hover:text-slate-400" @click.stop="sidebarOpen = !sidebarOpen" aria-controls="sidebar" :aria-expanded="sidebarOpen">
+                        <span class="sr-only">Close sidebar</span>
+                        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
+                        </svg>
+                    </button>
+                    <!-- Logo -->
+                    <a class="block" href="#">
+                        <svg width="32" height="32" viewBox="0 0 32 32">
+                            <defs>
+                                <linearGradient x1="28.538%" y1="20.229%" x2="100%" y2="108.156%" id="logo-a">
+                                    <stop stop-color="#A5B4FC" stop-opacity="0" offset="0%" />
+                                    <stop stop-color="#A5B4FC" offset="100%" />
+                                </linearGradient>
+                                <linearGradient x1="88.638%" y1="29.267%" x2="22.42%" y2="100%" id="logo-b">
+                                    <stop stop-color="#38BDF8" stop-opacity="0" offset="0%" />
+                                    <stop stop-color="#38BDF8" offset="100%" />
+                                </linearGradient>
+                            </defs>
+                            <rect fill="#6366F1" width="32" height="32" rx="16" />
+                            <path d="M18.277.16C26.035 1.267 32 7.938 32 16c0 8.837-7.163 16-16 16a15.937 15.937 0 01-10.426-3.863L18.277.161z" fill="#4F46E5" />
+                            <path d="M7.404 2.503l18.339 26.19A15.93 15.93 0 0116 32C7.163 32 0 24.837 0 16 0 10.327 2.952 5.344 7.404 2.503z" fill="url(#logo-a)" />
+                            <path d="M2.223 24.14L29.777 7.86A15.926 15.926 0 0132 16c0 8.837-7.163 16-16 16-5.864 0-10.991-3.154-13.777-7.86z" fill="url(#logo-b)" />
+                        </svg>
+                    </a>
+                </div>
+        
+                <!-- Links -->
+                <div class="space-y-8">
+                    <!-- Pages group -->
+                    <div>
+                        <h3 class="text-xs uppercase text-slate-500 font-semibold pl-3">
+                            <span class="hidden lg:block lg:sidebar-expanded:hidden 2xl:hidden text-center w-6" aria-hidden="true">•••</span>
+                            <span class="lg:hidden lg:sidebar-expanded:block 2xl:block">Pages</span>
+                        </h3>
+                        <ul class="mt-3">
+                            <!-- Tasks -->
+                            <li class="px-3 py-2 rounded-sm mb-0.5 last:mb-0" x-data="{ open: false }">
+                                <a class="block text-slate-200 hover:text-white truncate transition duration-150" href="#0" @click.prevent="sidebarExpanded ? open = !open : sidebarExpanded = true">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <svg class="shrink-0 h-6 w-6" viewBox="0 0 24 24">
+                                                <path class="fill-current text-slate-600" d="M8 1v2H3v19h18V3h-5V1h7v23H1V1z" />
+                                                <path class="fill-current text-slate-600" d="M1 1h22v23H1z" />
+                                                <path class="fill-current text-slate-400" d="M15 10.586L16.414 12 11 17.414 7.586 14 9 12.586l2 2zM5 0h14v4H5z" />
+                                            </svg>
+                                            <span class="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Jurnal</span>
+                                        </div>
+                                        <!-- Icon -->
+                                        <div class="flex shrink-0 ml-2 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
+                                            <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" :class="open ? 'rotate-180' : 'rotate-0'" viewBox="0 0 12 12">
+                                                <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="lg:hidden lg:sidebar-expanded:block 2xl:block">
+                                    <ul class="pl-9 mt-1 hidden" :class="open ? '!block' : 'hidden'">
+                                        <li class="mb-1 last:mb-0">
+                                            <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate" href="/jurnal">
+                                                <span class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">List</span>
+                                            </a>
+                                        </li>
+                                        <li class="mb-1 last:mb-0">
+                                            <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate" href="#">
+                                                <span class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Tambah Jurnal</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+        
+                <!-- Expand / collapse button -->
+                <div class="pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto">
+                    <div class="px-3 py-2">
+                        <button @click="sidebarExpanded = !sidebarExpanded">
+                            <span class="sr-only">Expand / collapse sidebar</span>
+                            <svg class="w-6 h-6 fill-current sidebar-expanded:rotate-180" viewBox="0 0 24 24">
+                                <path class="text-slate-400" d="M19.586 11l-5-5L16 4.586 23.414 12 16 19.414 14.586 18l5-5H7v-2z" />
+                                <path class="text-slate-600" d="M3 23H1V1h2z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+        
+            </div>
+        </div>
+
+        <!-- Content area -->
+        <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden bg-white">
+
+            <!-- Site header -->
+            <header class="sticky top-0 bg-white border-b border-slate-200 z-30">
+                <div class="px-4 sm:px-6 lg:px-8">
+                    <div class="flex items-center justify-between h-16 -mb-px">
+
+                        <!-- Header: Left side -->
+                        <div class="flex">
+                            <!-- Hamburger button -->
+                            <button
+                                class="text-slate-500 hover:text-slate-600 lg:hidden"
+                                @click.stop="sidebarOpen = !sidebarOpen"
+                                aria-controls="sidebar"
+                                :aria-expanded="sidebarOpen"
+                            >
+                                <span class="sr-only">Open sidebar</span>
+                                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="4" y="5" width="16" height="2" />
+                                    <rect x="4" y="11" width="16" height="2" />
+                                    <rect x="4" y="17" width="16" height="2" />
+                                </svg>
+                            </button>
+
+                        </div>
+
+                        <!-- Header: Right side -->
+                        <div class="flex items-center space-x-3">
+
+                            <!-- Divider -->
+                            <hr class="w-px h-6 bg-slate-200" />
+
+                            <!-- User button -->
+                            <div class="relative inline-flex" x-data="{ open: false }">
+                                <button
+                                    class="inline-flex justify-center items-center group"
+                                    aria-haspopup="true"
+                                    @click.prevent="open = !open"
+                                    :aria-expanded="open"                        
+                                >
+                                    <img class="w-8 h-8 rounded-full" src="{{url_for('static', filename='image/user-03.jpg')}}" width="32" height="32" alt="User" />
+                                    <div class="flex items-center truncate">
+                                        <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
+                                            <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
+                                        </svg>
+                                    </div>
+                                </button>
+                                <div
+                                    class="origin-top-right z-10 absolute top-full right-0 min-w-44 bg-white border border-slate-200 py-1.5 rounded shadow-lg overflow-hidden mt-1"                
+                                    @click.outside="open = false"
+                                    @keydown.escape.window="open = false"
+                                    x-show="open"
+                                    x-transition:enter="transition ease-out duration-200 transform"
+                                    x-transition:enter-start="opacity-0 -translate-y-2"
+                                    x-transition:enter-end="opacity-100 translate-y-0"
+                                    x-transition:leave="transition ease-out duration-200"
+                                    x-transition:leave-start="opacity-100"
+                                    x-transition:leave-end="opacity-0"
+                                    x-cloak                    
+                                >
+                                    <ul>
+                                        <li>
+                                            <a class="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3" href="/logout" @click="open = false" @focus="open = true" @focusout="open = false">Sign Out</a>
+                                        </li>
+                                    </ul>                
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+            
+            <main>
+
+                <!-- Search area -->
+
+                <div class="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
+
+                    <!-- Sections -->
+                    <div class="space-y-8">
+                        <div class="bg-white shadow-lg rounded-sm border border-slate-200">
+                            <div class="flex">
+                                <header class="px-4 py-4">
+                                    <h2 class="font-semibold text-slate-800"><a href="/jurnal">{{jurnal.name}}</a></h2>
+                                    <h3><span class="text-slate-400 font-medium">Rp.{{kas}}</span></h3>
+                                </header>
+                                <div style="margin-top: 8px; margin-left: 82%;" x-data="{ modalOpen: false }">
+                                    <button
+                                        class="btn border-slate-200 hover:border-slate-300"
+                                        @click.prevent="modalOpen = true"
+                                        aria-controls="basic-modal"
+                                    >
+                                    <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                                    </svg>
+                                </button>
+                                    <!-- Modal backdrop -->
+                                    <div
+                                        class="fixed inset-0 bg-slate-900 bg-opacity-30 z-50 transition-opacity"
+                                        x-show="modalOpen"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        x-transition:leave="transition ease-out duration-100"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        aria-hidden="true"
+                                        x-cloak
+                                    ></div>
+                                    <!-- Modal dialog -->
+                                    <div
+                                        id="basic-modal"
+                                        class="fixed inset-0 z-50 overflow-hidden flex items-center my-4 justify-center px-4 sm:px-6"
+                                        role="dialog"
+                                        aria-modal="true"
+                                        x-show="modalOpen"
+                                        x-transition:enter="transition ease-in-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-4"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in-out duration-200"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 translate-y-4"
+                                        x-cloak
+                                    >
+                                        <form action="/jurnal/{{id}}/transaction/create" method="POST">
+                                            <div class="bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full" @click.outside="modalOpen = false" @keydown.escape.window="modalOpen = false">
+                                                <!-- Modal header -->
+                                                <div class="px-5 py-3 border-b border-slate-200">
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="font-semibold text-slate-800">New Transaction</div>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal content -->
+                                                <div class="px-5 pt-4 pb-1">
+                                                    <div class="text-sm">
+                                                        <div class="space-y-2">
+                                                            <div class="w-full max-w-xs">
+                                                                {{form.csrf_token}}
+                                                                <div class="mb-4">
+                                                                    <label for="">
+                                                                        {{form.date.label}}
+                                                                    </label>
+                                                                    <div class="flex items-center justify-center">
+                                                                        <div class="datepicker relative form-floating mb-3 xl:w-96" data-mdb-toggle-button="false">
+                                                                            {{form.date(class="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none",placeholder="Select a date", required='required' )}}
+                                                                          <label for="floatingInput" class="text-gray-700">Select a date</label>
+                                                                          <button class="datepicker-toggle-button" data-mdb-toggle="datepicker">
+                                                                            <i class="fas fa-calendar datepicker-toggle-icon"></i>
+                                                                          </button>
+                                                                        </div>
+                                                                      </div>
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="">
+                                                                        {{form.description.label}}
+                                                                    </label>
+                                                                    {{form.description(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type="text", required='required')}}
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="">
+                                                                        {{form.debt.label}}
+                                                                    </label>
+                                                                    {{form.debt(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type="text", required='required', value=0)}}
+                                                                </div>
+                                                                <div class="mb-4">
+                                                                    <label for="">
+                                                                        {{form.kredit.label}}
+                                                                    </label>
+                                                                    {{form.kredit(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", type="text", required='required', value=0)}}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal footer -->
+                                                <div class="px-5 py-4">
+                                                    <div class="flex flex-wrap justify-end space-x-2">
+                                                        <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white" type="submit">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>                                            
+                                </div>
+                            </div>
+                            <div x-data="handleSelect">
+                                <!-- Table -->
+                                <div class="overflow-x-auto">
+                                    <table class="table-auto w-full">
+                                        <!-- Table header -->
+                                        <thead class="text-xs font-semibold uppercase text-slate-500 bg-slate-50 border-t border-b border-slate-200">
+                                            <tr>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Date</div>
+                                                </th>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Description</div>
+                                                </th>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Debt</div>
+                                                </th>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Kredit</div>
+                                                </th>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold text-left">Kas</div>
+                                                </th>
+                                                <th class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="font-semibold"></div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <!-- Table body -->
+                                        <tbody class="text-sm divide-y divide-slate-200">
+                                            <!-- Row -->
+                                            {% for lt in list_transaction %}
+                                            <tr>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="text-left">{{lt.date}}</div>
+                                                </td>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="text-left">{{lt.description}}</div>
+                                                </td>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="text-left">{{lt.debt}}</div>
+                                                </td>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="text-left">{{lt.kredit}}</div>
+                                                </td>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="text-left">{{lt.kas}}</div>
+                                                </td>
+                                                <td class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap">
+                                                    <div class="flex flex-wrap items-center -m-1.5">
+                                                        <div class="m-1.5">
+                                                            <!-- Start -->
+                                                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/edit"  class="btn border-slate-200 hover:border-slate-300">
+                                                                <svg class="w-4 h-4 fill-current text-slate-500 shrink-0" viewBox="0 0 16 16">
+                                                                    <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
+                                                                </svg>
+                                                            </a>
+                                                            <!-- End -->
+                                                        </div>
+                                                        <div class="m-1.5">
+                                                            <!-- Start -->
+                                                            <a href="/jurnal/{{id}}/transaction/{{lt.id}}/delete" class="btn border-slate-200 hover:border-slate-300">
+                                                                <svg class="w-4 h-4 fill-current text-rose-500 shrink-0" viewBox="0 0 16 16">
+                                                                    <path d="M5 7h2v6H5V7zm4 0h2v6H9V7zm3-6v2h4v2h-1v10c0 .6-.4 1-1 1H2c-.6 0-1-.4-1-1V5H0V3h4V1c0-.6.4-1 1-1h6c.6 0 1 .4 1 1zM6 2v1h4V2H6zm7 3H3v9h10V5z" />
+                                                                </svg>
+                                                            </a>
+                                                            <!-- End -->
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+      
+    <script src="https://unpkg.com/flowbite@1.5.5/dist/datepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+    <script src="{{url_for('static', filename='js/vendors/alpinejs.min.js')}}" defer></script>    
+    <script src="{{url_for('static', filename='js/vendors/flatpickr.js')}}" defer></script>    
+    <script src="{{url_for('static', filename='/js/flatpickr-init.js')}}" defer></script>    
+
+</body>
+
+</html>
