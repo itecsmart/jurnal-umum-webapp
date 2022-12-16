@@ -51,7 +51,7 @@ def edit(id, t_id):
     transaction = Transaction.query.filter_by(id=t_id).first()
     if request.method=='POST':
         form = TransactionForm()
-        transaction.date = datetime.datetime.strptime(form.date.data, "%Y/%M/%d")
+        transaction.date = datetime.datetime.strptime(form.date.data, "%d/%M/%Y")
         transaction.description = form.description.data
         transaction.debt = form.debt.data
         transaction.kredit = form.kredit.data
@@ -59,7 +59,7 @@ def edit(id, t_id):
         db.session.commit()
         return redirect(url_for('transaction_bp.transaction', id=id))
     form = TransactionForm(
-        date = datetime.datetime.strftime(transaction.date, '%Y/%m/%d'),
+        date = datetime.datetime.strftime(transaction.date, '%d/%m/%Y'),
         description= transaction.description,
         kredit= transaction.kredit,
         debt= transaction.debt
