@@ -32,7 +32,7 @@
                     <div class="flex-1">
                         <div class="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
                             <!-- Logo -->
-                            <a class="block" href="index.html">
+                            <a class="block" href="#">
                                 <svg width="32" height="32" viewBox="0 0 32 32">
                                     <defs>
                                         <linearGradient x1="28.538%" y1="20.229%" x2="100%" y2="108.156%" id="logo-a">
@@ -62,17 +62,17 @@
                             <div class="space-y-4">
                                 <div>
                                     {{form.username.label(class='block text-sm font-medium mb-1')}}
-                                    {{form.username(class='form-input w-full',value='apip', id="email")}}
+                                    {{form.username(class='form-input w-full', id="email")}}
                                     
                                 </div>
                                 <div>
                                     {{form.password.label(class='block text-sm font-medium mb-1', for='password')}}
-                                    {{form.password(id="password", class="form-input w-full",type="password", autocomplete="on", value='pipopedeng')}}
+                                    {{form.password(id="password", class="form-input w-full",type="password", autocomplete="on")}}
                                 </div>
                             </div>
                             <div class="flex items-center justify-between mt-6">
                                 <div class="mr-1">
-                                    <a class="text-sm underline hover:no-underline" href="reset-password.html">Forgot Password?</a>
+                                    <a class="text-sm underline hover:no-underline" href="#">Forgot Password?</a>
                                 </div>
                                 <button class="btn bg-indigo-500 hover:bg-indigo-600 text-white ml-3" type="submit">Sign In</button>
                             </div>
