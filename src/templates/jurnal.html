@@ -104,7 +104,7 @@
                                             </a>
                                         </li>
                                         <li class="mb-1 last:mb-0">
-                                            <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate" href="/jurnal/create">
+                                            <a class="block text-slate-400 hover:text-slate-200 transition duration-150 truncate" href="#">
                                                 <span class="text-sm font-medium lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">Tambah Jurnal</span>
                                             </a>
                                         </li>
@@ -267,9 +267,89 @@
                     <!-- Sections -->
                     <div class="space-y-8">
                         <div class="bg-white shadow-lg rounded-sm border border-slate-200">
-                            <header class="px-5 py-4">
-                                <h2 class="font-semibold text-slate-800">List Jurnal <span class="text-slate-400 font-medium">248</span></h2>
-                            </header>
+                            <div class="flex">
+                                <header class="px-5 py-4">
+                                    <h2 class="font-semibold text-slate-800">List Jurnal <span class="text-slate-400 font-medium">248</span></h2>
+                                </header>
+                                <div style="margin-top: 8px; margin-left: 82%;" x-data="{ modalOpen: false }">
+                                    <button
+                                        class="btn border-slate-200 hover:border-slate-300"
+                                        @click.prevent="modalOpen = true"
+                                        aria-controls="basic-modal"
+                                    >
+                                    <svg class="w-4 h-4 fill-current opacity-50 shrink-0" viewBox="0 0 16 16">
+                                        <path d="M15 7H9V1c0-.6-.4-1-1-1S7 .4 7 1v6H1c-.6 0-1 .4-1 1s.4 1 1 1h6v6c0 .6.4 1 1 1s1-.4 1-1V9h6c.6 0 1-.4 1-1s-.4-1-1-1z" />
+                                    </svg>
+                                </button>
+                                    <!-- Modal backdrop -->
+                                    <div
+                                        class="fixed inset-0 bg-slate-900 bg-opacity-30 z-50 transition-opacity"
+                                        x-show="modalOpen"
+                                        x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0"
+                                        x-transition:enter-end="opacity-100"
+                                        x-transition:leave="transition ease-out duration-100"
+                                        x-transition:leave-start="opacity-100"
+                                        x-transition:leave-end="opacity-0"
+                                        aria-hidden="true"
+                                        x-cloak
+                                    ></div>
+                                    <!-- Modal dialog -->
+                                    <div
+                                        id="basic-modal"
+                                        class="fixed inset-0 z-50 overflow-hidden flex items-center my-4 justify-center px-4 sm:px-6"
+                                        role="dialog"
+                                        aria-modal="true"
+                                        x-show="modalOpen"
+                                        x-transition:enter="transition ease-in-out duration-200"
+                                        x-transition:enter-start="opacity-0 translate-y-4"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition ease-in-out duration-200"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 translate-y-4"
+                                        x-cloak
+                                    >
+                                        <form action="/jurnal/create" method="POST">
+                                            <div class="bg-white rounded shadow-lg overflow-auto max-w-lg w-full max-h-full" @click.outside="modalOpen = false" @keydown.escape.window="modalOpen = false">
+                                                <!-- Modal header -->
+                                                <div class="px-5 py-3 border-b border-slate-200">
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="font-semibold text-slate-800">New Jurnal</div>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal content -->
+                                                <div class="px-5 pt-4 pb-1">
+                                                    <div class="text-sm">
+                                                        <div class="space-y-2">
+                                                            <div class="w-full max-w-xs">
+                                                                    {{ form.csrf_token }}
+                                                                  <div class="mb-4">
+                                                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="username">
+                                                                      {{form.name.label}}
+                                                                    </label>
+                                                                    {{form.name(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", id="username", type="text", placeholder="Name", required='required')}}
+                                                                  </div>
+                                                                  <div class="mb-6">
+                                                                    <label class="block text-gray-700 text-sm font-bold mb-2" for="password">
+                                                                      {{form.description.label}}
+                                                                    </label>
+                                                                    {{form.description(class='shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outlin', placeholder="Description", required='required')}}
+                                                                  </div>
+                                                              </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Modal footer -->
+                                                <div class="px-5 py-4">
+                                                    <div class="flex flex-wrap justify-end space-x-2">
+                                                        <button class="btn-sm bg-indigo-500 hover:bg-indigo-600 text-white" type="submit">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>                                            
+                                </div>
+                            </div>
                             <div x-data="handleSelect">
                                 <!-- Table -->
                                 <div class="overflow-x-auto">
@@ -303,7 +383,7 @@
                                                     <div class="flex flex-wrap items-center -m-1.5">
                                                         <div class="m-1.5">
                                                             <!-- Start -->
-                                                            <a  class="btn border-slate-200 hover:border-slate-300">
+                                                            <a href="/jurnal/{{j.id}}/update"  class="btn border-slate-200 hover:border-slate-300">
                                                                 <svg class="w-4 h-4 fill-current text-slate-500 shrink-0" viewBox="0 0 16 16">
                                                                     <path d="M11.7.3c-.4-.4-1-.4-1.4 0l-10 10c-.2.2-.3.4-.3.7v4c0 .6.4 1 1 1h4c.3 0 .5-.1.7-.3l10-10c.4-.4.4-1 0-1.4l-4-4zM4.6 14H2v-2.6l6-6L10.6 8l-6 6zM12 6.6L9.4 4 11 2.4 13.6 5 12 6.6z" />
                                                                 </svg>
@@ -312,7 +392,7 @@
                                                         </div>
                                                         <div class="m-1.5">
                                                             <!-- Start -->
-                                                            <a class="btn border-slate-200 hover:border-slate-300">
+                                                            <a href="/jurnal/{{j.id}}/delete" class="btn border-slate-200 hover:border-slate-300">
                                                                 <svg class="w-4 h-4 fill-current text-rose-500 shrink-0" viewBox="0 0 16 16">
                                                                     <path d="M5 7h2v6H5V7zm4 0h2v6H9V7zm3-6v2h4v2h-1v10c0 .6-.4 1-1 1H2c-.6 0-1-.4-1-1V5H0V3h4V1c0-.6.4-1 1-1h6c.6 0 1 .4 1 1zM6 2v1h4V2H6zm7 3H3v9h10V5z" />
                                                                 </svg>
@@ -321,7 +401,7 @@
                                                         </div>
                                                         <div class="m-1.5">
                                                             <!-- Start -->
-                                                            <a href="jurnal/{{j.id}}/transaction" class="btn border-slate-200 hover:border-slate-300">
+                                                            <a href="/jurnal/{{j.id}}/transaction" class="btn border-slate-200 hover:border-slate-300">
                                                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 fill-current text-indigo-500 shrink-0" viewBox="0 0 16 16">
                                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                                     <rect x="3" y="5" width="18" height="14" rx="3" />
@@ -330,14 +410,6 @@
                                                                     <line x1="11" y1="15" x2="13" y2="15" />
                                                                 </svg>
                                                             </a>
-                                                            <!-- <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-credit-card" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <rect x="3" y="5" width="18" height="14" rx="3" />
-                                                                <line x1="3" y1="10" x2="21" y2="10" />
-                                                                <line x1="7" y1="15" x2="7.01" y2="15" />
-                                                                <line x1="11" y1="15" x2="13" y2="15" />
-                                                              </svg> -->
-                                                            <!-- End -->
                                                         </div>
                                                     </div>
                                                 </td>
