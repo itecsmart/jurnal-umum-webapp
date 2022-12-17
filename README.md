@@ -1,5 +1,6 @@
 # jurnal-umum-webapp
 Aplikasi Pencatatan Jurnal Umum menggunakan Framework Flask.
+![login](/src/static/image/jurnal.png)
 
 ## Tujuan:
 1. Gambaran minimum aplikasi yang dapat di buat oleh peserta kursus python web apps.
@@ -68,6 +69,21 @@ Aplikasi Pencatatan Jurnal Umum menggunakan Framework Flask.
    ```
    python app.py
    ```
+   
+   Buka aplikasi pada web browser anda dengan menuliskan port yang tertera di terminal anda
+   ![run](/src/static/image/run.png)
+
+   Agar anda mengakses halaman login, tambahkan /login di belakang posrt :5000
+
+   ![login_url](/src/static/image/login_url.png)
+
+   Masukan username dan password unutk mengakses jurnal
+
+   ```
+   username : apip
+   password : pipopedeng
+   ```
+   ![login](/src/static/image/login.png)
 ### 3. Video Tutorial
    
    Comming soon : )
