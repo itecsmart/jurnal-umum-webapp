@@ -77,7 +77,7 @@ Aplikasi Pencatatan Jurnal Umum menggunakan Framework Flask.
 
    ![login_url](/src/static/image/login_url.png)
 
-   Masukan username dan password unutk mengakses jurnal
+   Masukan username dan password untuk mengakses jurnal
 
    ```
    username : apip
@@ -86,4 +86,4 @@ Aplikasi Pencatatan Jurnal Umum menggunakan Framework Flask.
    ![login](/src/static/image/login.png)
 ### 3. Video Tutorial
    
-   Comming soon : )
+   [video_tutorial](https://www.youtube.com/watch?v=WBhNVDtNuHA&t=185s)
